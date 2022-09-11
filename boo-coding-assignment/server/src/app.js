@@ -1,4 +1,5 @@
 'use strict';
+const service = require('./service.js')
 const { MongoClient } = require('mongodb');
 
 let client, db
@@ -47,13 +48,13 @@ let Zodiac_categories = ["Aries", "Taurus", "Gemini", "Cancer", "Leo", "Virgo", 
 
 
 app.get('/all_profiles',async (req, res) => {
-    let profiles = await db.collection("profiles").find().toArray()
+    let profiles = await service.getAllProfiles(db)
     res.status(200).send(profiles)
 })
 
-app.get('/profile/:id', (req, res) => {
+app.get('/profile/:id',async (req, res) => {
     let {id} = req.params
-    let profile = db.collection("profiles").find({"id":id}).toArray()
+    let profile = await service.getProfileById(db, id)
     res.status(200).send(profile)
 })
 
@@ -104,7 +105,6 @@ app.post('/create_profile',async (req, res) => {
     }
 
     let profile = {
-        // "id": profiles.length,
         "name": name,
         "description": description,
         "mbti": mbti,
@@ -117,8 +117,7 @@ app.post('/create_profile',async (req, res) => {
         "image": image,
     }
 
-    // profiles.push(profile)
-    await db.collection("profiles").insert(profile)
+    await service.createProfile(db, profile)
 
     res.status(200).send(
         `${JSON.stringify(profile)} \n profile added to database successfully!`
