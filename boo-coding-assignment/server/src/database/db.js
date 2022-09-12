@@ -43,13 +43,13 @@ const createProfile = async (db, profile) => {
     return profile
 }
 
-const submitComment = async (db, userId, profileId, comment) => {
-    await db.collection("comments").insert({ profileId: profileId, userId: userId, comment: comment })
+const insertComment = async (db, userId, profileId, comment) => {
+    await db.collection("comments").insertOne({ profileId: profileId, userId: userId, comment: comment })
 }
 
 const getComments = async (db, userId, profileId) => {
-    let comment = await db.collection("comments").find({profileId: profileId, userId: userId}).toArray()
-    return comment
+    let comments = await db.collection("comments").find({profileId: profileId, userId: userId}).toArray()
+    return comments
 }
 
 const submitVote = async (db, userId, profileId, vote) => {
@@ -61,4 +61,4 @@ const getVote = async (db, userId, profileId) => {
     return vote
 }
 
-module.exports = {connectToDb, getProfileById, getAllProfiles, createProfile, submitComment, getComments, submitVote, getVote}
+module.exports = {connectToDb, getProfileById, getAllProfiles, createProfile, submitComment: insertComment, getComments, submitVote, getVote}

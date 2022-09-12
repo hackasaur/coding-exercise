@@ -1,28 +1,31 @@
 ```shell
+(create profile)
 curl --header "Content-Type: application/json" \
   --request POST \
-  --data '{"name":"Isildur", "description": "lotr", "mbti":"ISFJ", "enneagram": "9w1", "variant":"sp/so", "tritype":"725", "socionics":"SEE", "sloan": "RCOEN", "psyche":"FEVL", "image":"🥸"}' \
+  --data '{"name":"Gladriel", "description": "lotr", "mbti":"ISFJ", "enneagram": "9w1", "variant":"sp/so", "tritype":"725", "socionics":"SEE", "sloan": "RCOEN", "psyche":"FEVL", "image":"🥸"}' \
   http://localhost:3000/create_profile --verbose
 
-
+(get profiles)
 curl --header "Content-Type: application/json" \
     http://localhost:3000/all_profiles --verbose
 
-
+(get comments)
 curl --header "Content-Type: application/json" \
-    http://localhost:3000/get_comments/631e25ad9a2f40ec4f9dcd5b/631e277ae30176554953bd9b --verbose
+    http://localhost:3000/get_comments/<profileId>/<userId> --verbose
 
+(submit comment)
 curl --header "Content-Type: application/json" \
   --request POST \
-  --data '{"userId":"631e277ae30176554953bd9b", "profileId":"631e25ad9a2f40ec4f9dcd5b", "comment":"Hi Gandalf - Gladriel"}' \
+  --data '{"userId":"<id>", "profileId":"<id>", "comment":"Hi Gandalf - Gladriel"}' \
   http://localhost:3000/submit_comment --verbose
 
-curl --header "Content-Type: application/json" \
-  --request POST \
-  --data '{"userId":"631e277ae30176554953bd9b", "profileId":"631e25ad9a2f40ec4f9dcd5b", "vote":{"mbti":"ISFJ","enneagram":"1w2", "zodiac":"Cancer"}}' \
+(submit vote)
+curl --header "content-type: application/json" \
+  --request post \
+  --data '{"userid":"<id>", "profileid":"<id>", "vote":{"mbti":"isfj","enneagram":"1w2", "zodiac":"cancer"}}' \
   http://localhost:3000/submit_vote --verbose
 
-
+(get vote)
 curl --header "Content-Type: application/json" \
     http://localhost:3000/get_vote/631e25ad9a2f40ec4f9dcd5b/631e277ae30176554953bd9b --verbose
 
@@ -56,3 +59,33 @@ docker run --interactive --tty \
     --network mongo-node-network \
     coding-exercise bash
 ```
+
+## test
+curl --header "Content-Type: application/json" \
+  --request POST \
+  --data '{"name":"Gladriel", "description": "lotr", "mbti":"ISFJ", "enneagram": "9w1", "variant":"sp/so", "tritype":"725", "socionics":"SEE", "sloan": "RCOEN", "psyche":"FEVL", "image":"🧝"}' \
+  http://localhost:3000/create_profile --verbose
+
+
+curl --header "Content-Type: application/json" \
+  --request POST \
+  --data '{"name":"Gandalf", "description": "lotr", "mbti":"ISFJ", "enneagram": "9w1", "variant":"sp/so", "tritype":"725", "socionics":"SEE", "sloan": "RCOEN", "psyche":"FEVL", "image":"🥸"}' \
+  http://localhost:3000/create_profile --verbose
+
+
+curl --header "Content-Type: application/json" \
+  --request POST \
+  --data '{"userId":"631f0268eb14649b35c45d3b", "profileId":"631f027deb14649b35c45d3c", "comment":"Hey are you there? part 2"}' \
+  http://localhost:3000/submit_comment --verbose
+
+
+curl --header "Content-Type: application/json" \
+    http://localhost:3000/get_comments/631f027deb14649b35c45d3c/631f0268eb14649b35c45d3b --verbose
+
+curl --header "Content-Type: application/json" \
+  --request POST \
+  --data '{"userId":"631f05d0be388d469b7cc2b6", "profileId":"631f05c1be388d469b7cc2b5", "vote":{"mbti":"ISFJ","enneagram":"1w2", "zodiac":"Cancer"}}' \
+  http://localhost:3000/submit_vote --verbose
+
+curl --header "Content-Type: application/json" \
+    http://localhost:3000/get_vote/631f05c1be388d469b7cc2b5/631f05d0be388d469b7cc2b6 --verbose
