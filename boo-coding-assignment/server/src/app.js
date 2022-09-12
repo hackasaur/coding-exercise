@@ -1,38 +1,12 @@
 'use strict';
-const service = require('./service.js')
+const database = require('./db.js')
 const { MongoClient } = require('mongodb');
 
-let client, db
+let client = await MongoClient.connect('mongodb://mongodb:27017/myappdb');
 
-const connectToDb = async () => {
-    client = await MongoClient.connect('mongodb://mongodb:27017/myappdb');
-    db = client.db()
-    try {
-        await db.createCollection("profiles")
-    }
-    catch
-    { console.log("collection 'profiles' already exists") }
+let db
 
-    try {
-        await db.createCollection("comments")
-    }
-    catch
-    { console.log("collection 'comments' already exists") }
-
-    try {
-        await db.createCollection("votes")
-        await db.collection("votes").createIndex({"userId" : 1, "profileId" :1}, {unique : true})
-    }
-    catch
-    { console.log("collection 'votes' already exists") }
-
-    const items = await db.collection("profiles").find().toArray()
-    console.log(items)
-
-    return db
-}
-
-connectToDb()
+database.connectToDb(db, client)
 
 const express = require('express');
 const app = express();
@@ -64,13 +38,13 @@ let Zodiac_categories = ["Aries", "Taurus", "Gemini", "Cancer", "Leo", "Virgo", 
 
 
 app.get('/all_profiles', async (req, res) => {
-    let profiles = await service.getAllProfiles(db)
+    let profiles = await database.getAllProfiles(db)
     res.status(200).send(profiles)
 })
 
 app.get('/profile/:id', async (req, res) => {
     let { id } = req.params
-    let profile = await service.getProfileById(db, id)
+    let profile = await database.getProfileById(db, id)
     res.status(200).send(profile)
 })
 
@@ -118,7 +92,7 @@ app.post('/create_profile', async (req, res) => {
         return
     }
 
-    await service.createProfile(db, profile)
+    await database.createProfile(db, profile)
 
     res.status(200).send(
         `${JSON.stringify(profile)} \n profile is added to the database`
@@ -138,7 +112,7 @@ app.get('/get_comments/:profileId/:userId/', async (req, res) => {
         return
     }
 
-    let comments = await service.getComments(db, userId, profileId)
+    let comments = await database.getComments(db, userId, profileId)
 
     res.status(200).send(comments)
     return
@@ -160,7 +134,7 @@ app.post('/submit_comment/', async (req, res) => {
         return
     }
 
-    await service.submitComment(db, userId, profileId, comment)
+    await database.submitComment(db, userId, profileId, comment)
 
     res.status(200).send(
         `The comment "${comment}" was added to the profileId:${profileId} by userId:${userId}`
@@ -198,7 +172,7 @@ app.post('/submit_vote', async (req, res) => {
         return
     }
 
-    await service.submitVote(db, userId, profileId, vote)
+    await database.submitVote(db, userId, profileId, vote)
     
     res.status(200).send(
         `The vote "${JSON.stringify(vote)}" was added to the profileId:${profileId} by userId:${userId}`
@@ -218,7 +192,7 @@ app.get('/get_vote/:profileId/:userId/', async (req, res) => {
         return
     }
 
-    let vote = await service.getVote(db, userId, profileId)
+    let vote = await database.getVote(db, userId, profileId)
 
     res.status(200).send(vote)
 })

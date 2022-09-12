@@ -36,16 +36,16 @@ Zodiac
 Aries, Taurus, Gemini, Cancer, Leo, Virgo, Libra, Scorpio, Sagittarius, Capricorn, Aquarius, Pisces
 
 # todo
-- [] Update the get route to handle profile ids in the url
-- [] server should retrieve the corresponding profile from the database and render the page accordingly
-    - [x] app.get(/id) to get profile json
+- [ ] Update the get route to handle profile ids in the url
+- [ ] server should retrieve the corresponding profile from the database and render the page accordingly
+    - [x] app.get(profile/id) to get profile json
     - [ ] render page
-- [] Implement a backend API that supports the commenting and voting functionality described in the Figma
-- [] store votes/comments in mongodb
+- [ ] Implement a backend API that supports the commenting and voting functionality described in the Figma
+- [ ] store votes/comments in mongodb
+- [ ] profiles, votes, comments should be unique
 - [x] add a volume to mongodb container to persist the db 
 - [] add code to append profiles in profile.js and render page using ejs for a `profile[i]` in general for get request through browser 
 - [ ] add automated  testing
-
 
 ## things to learn
 - mosh exrpess js to change get url
