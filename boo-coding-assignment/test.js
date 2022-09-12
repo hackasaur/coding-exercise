@@ -125,7 +125,6 @@ fetch(`${URL}/${createProfile}`, {
             console.log('\n')
             let commentRecord = JSON.parse(text)["comment"]
             let commentID = commentRecord["_id"]
-            console.log(commentID)
 
             //then get the comments submitted before
             fetch(`${URL}/${getComments}/${profile2_id}/${profile1_id}`, {
@@ -148,7 +147,6 @@ fetch(`${URL}/${createProfile}`, {
                 }
 
                 for (let comment of comments) {
-                    console.log(comment)
                     if (comment["_id"] == commentID) {
                         if (comment["comment"] == testComment)
                             console.log("[PASS]", `comment has matched! app.post('/${submitComment}') and app.get('/${getComments}) are working correctly\n`)
