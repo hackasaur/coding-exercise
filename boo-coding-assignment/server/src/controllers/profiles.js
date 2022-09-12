@@ -1,7 +1,7 @@
 const database = require('../database/db.js')
+const {MBTI_categories, Enneagram_categories, Zodiac_categories} = require('./categories.json')
 
 const profilesController = (db) => {
-    let db = db
     return {
         createProfile: async (req, res) => {
             let {
@@ -49,7 +49,7 @@ const profilesController = (db) => {
             await database.createProfile(db, profile)
 
             res.status(200).send(
-                `${JSON.stringify(profile)} \n profile is added to the database`
+                {"profile":profile, msg: "profile is added to the database"}
             )
             return
         },
@@ -65,4 +65,4 @@ const profilesController = (db) => {
     }
 }
 
-modules.exports = { profilesController }
+module.exports = { profilesController }

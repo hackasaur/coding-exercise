@@ -1,8 +1,9 @@
 const { ObjectId } = require('mongodb');
+const { MongoClient } = require('mongodb');
 
-const connectToDb = async (db, client) => {
-    // let client = await MongoClient.connect('mongodb://mongodb:27017/myappdb');
-    db = client.db()
+const connectToDb = async (mongoURI) => {
+    let client = await MongoClient.connect(mongoURI);
+    let db = client.db()
     try {
         await db.createCollection("profiles")
     }
@@ -39,7 +40,7 @@ const getAllProfiles = async (db) => {
 }
 
 const createProfile = async (db, profile) => {
-    await db.collection("profiles").insert(profile)
+    await db.collection("profiles").insertOne(profile)
     return profile
 }
 
@@ -53,7 +54,7 @@ const getComments = async (db, userId, profileId) => {
 }
 
 const submitVote = async (db, userId, profileId, vote) => {
-    await db.collection("votes").insert({ profileId: profileId, userId: userId, vote: vote })
+    await db.collection("votes").insertOne({ profileId: profileId, userId: userId, vote: vote })
 }
 
 const getVote = async (db, userId, profileId) => {

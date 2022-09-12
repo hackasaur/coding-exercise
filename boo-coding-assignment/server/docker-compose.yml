@@ -8,8 +8,8 @@ services:
     networks:
         - mongodb-net
     environment: 
-      MONGO_URI: mongodb://mongodb:27017/myappdb
-    restart: always
+      MONGO_URI: 'mongodb://mongodb:27017/myappdb'
+    # restart: always
 
   mongodb:
     image: mongo
@@ -17,6 +17,8 @@ services:
       - mongodata:/data/db
     networks:
       - mongodb-net
+    ports:
+      - 27071:27071
 
 volumes:
   mongodata:

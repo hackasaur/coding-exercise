@@ -1,4 +1,5 @@
 const database = require('../database/db.js')
+const {MBTI_categories, Enneagram_categories, Zodiac_categories} = require('./categories.json')
 
 const commentController = (db) => {
     return {
@@ -44,4 +45,4 @@ const commentController = (db) => {
         }
     }
 }
-modules.exports = { commentController }
+module.exports = { commentController }

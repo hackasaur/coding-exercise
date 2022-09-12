@@ -48,7 +48,7 @@ docker run -d --network mongo-node-network --name mongodb \
 
 docker run --interactive --tty \
     --publish 27017:27017 \
-    --network mongo-node-network \
+    --network mongo-net\
     --name mongodb \
     --volume mongodata:/data/db \
 	mongo
@@ -56,8 +56,10 @@ docker run --interactive --tty \
 docker run --interactive --tty \
     --publish 3000:3000 \
     --mount type=bind,source="$(pwd)",target=/server \
-    --network mongo-node-network \
-    coding-exercise bash
+    --network mongo-net \
+    --env MONGO_URI='mongodb://mongodb:27017/myappdb' \
+    --name booApp \
+    boo bash
 ```
 
 ## test
