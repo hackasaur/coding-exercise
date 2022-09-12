@@ -1,0 +1,25 @@
+version: "1.0"
+
+services:
+  app:
+    build: .
+    ports:
+      - 3000:3000
+    networks:
+        - mongodb-net
+    environment: 
+      MONGO_URI: mongodb://mongodb:27017/myappdb
+    restart: always
+
+  mongodb:
+    image: mongo
+    volumes:
+      - mongodata:/data/db
+    networks:
+      - mongodb-net
+
+volumes:
+  mongodata:
+
+networks:
+    mongodb-net:

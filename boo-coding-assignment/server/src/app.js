@@ -7,11 +7,24 @@ let client, db
 const connectToDb = async () => {
     client = await MongoClient.connect('mongodb://mongodb:27017/myappdb');
     db = client.db()
-    try{
+    try {
         await db.createCollection("profiles")
-    } 
+    }
     catch
-    { console.log("collection profiles already exists")}
+    { console.log("collection 'profiles' already exists") }
+
+    try {
+        await db.createCollection("comments")
+    }
+    catch
+    { console.log("collection 'comments' already exists") }
+
+    try {
+        await db.createCollection("votes")
+        await db.collection("votes").createIndex({"userId" : 1, "profileId" :1}, {unique : true})
+    }
+    catch
+    { console.log("collection 'votes' already exists") }
 
     const items = await db.collection("profiles").find().toArray()
     console.log(items)
@@ -40,25 +53,28 @@ console.log('Express started. Listening on %s', port);
 
 // let profiles = []
 
-let MBTI_categories = ["INFP", "INFJ", "ENFP", "ENFJ", "INTJ", "INTP", "ENTP", "ENTJ", "ISFP", "ISFJ", "ESFP", "ESFJ", "ISTP", "ISTJ", "ESTP", "ESTJ"]
+let MBTI_categories = ["INFP", "INFJ", "ENFP", "ENFJ", "INTJ", "INTP", "ENTP", "ENTJ",
+    "ISFP", "ISFJ", "ESFP", "ESFJ", "ISTP", "ISTJ", "ESTP", "ESTJ"]
 
-let Enneagram_categories = ["1w2", "2w3", "3w2", "3w4", "4w3", "4w5", "5w4", "5w6", "6w5", "6w7", "7w6", "7w8", "8w7", "8w9", "9w8", "9w1"]
+let Enneagram_categories = ["1w2", "2w3", "3w2", "3w4", "4w3", "4w5", "5w4", "5w6", "6w5",
+    "6w7", "7w6", "7w8", "8w7", "8w9", "9w8", "9w1"]
 
-let Zodiac_categories = ["Aries", "Taurus", "Gemini", "Cancer", "Leo", "Virgo", "Libra", "Scorpio", "Sagittarius", "Capricorn", "Aquarius", "Pisces"]
+let Zodiac_categories = ["Aries", "Taurus", "Gemini", "Cancer", "Leo", "Virgo", "Libra", "Scorpio",
+    "Sagittarius", "Capricorn", "Aquarius", "Pisces"]
 
 
-app.get('/all_profiles',async (req, res) => {
+app.get('/all_profiles', async (req, res) => {
     let profiles = await service.getAllProfiles(db)
     res.status(200).send(profiles)
 })
 
-app.get('/profile/:id',async (req, res) => {
-    let {id} = req.params
+app.get('/profile/:id', async (req, res) => {
+    let { id } = req.params
     let profile = await service.getProfileById(db, id)
     res.status(200).send(profile)
 })
 
-app.post('/create_profile',async (req, res) => {
+app.post('/create_profile', async (req, res) => {
     let {
         name,
         description,
@@ -71,38 +87,6 @@ app.post('/create_profile',async (req, res) => {
         psyche,
         image,
     } = req.body
-
-
-    if (!name) {
-        res.status(400).send(`name is undefined   name=${name}`)
-    }
-    if (!description) {
-        res.status(400).send(`Error:description is undefined\n   description=${description}`)
-    }
-    if (MBTI_categories.includes(mbti) == false) {
-        res.status(400).send(`Error:MBTI can be only of these categories: INFP, INFJ, ENFP, ENFJ, INTJ, INTP, ENTP, ENTJ, ISFP, ISFJ, ESFP, ESFJ, ISTP, ISTJ, ESTP, ESTJ\n    mbti=${mbti}`)
-    }
-    if (Enneagram_categories.includes(enneagram) == false) {
-        res.status(400).send(`Error:Enneagram can only be of these categories: 1w2, 2w3, 3w2, 3w4, 4w3, 4w5, 5w4, 5w6, 6w5, 6w7, 7w6, 7w8, 8w7, 8w9, 9w8, 9w1\n    enneagram=${enneagram}`)
-    }
-    if (!variant) {
-        res.status(400).send(`Error:variant is undefined\n    variant=${variant}`)
-    }
-    if (!tritype) {
-        res.status(400).send(`Error:tritype is undefined\n    tritype=${tritype}`)
-    }
-    if (!socionics) {
-        res.status(400).send(`Error:socionics is undefined\n    socionics=${socionics}`)
-    }
-    if (!sloan) {
-        res.status(400).send(`Error:sloan is undefined\n    sloan=${sloan}`)
-    }
-    if (!psyche) {
-        res.status(400).send(`Error:psyche is undefined\n   psyche=${psyche}`)
-    }
-    if (!image) {
-        res.status(400).send(`Error:image is undefined\n    image=${image}`)
-    }
 
     let profile = {
         "name": name,
@@ -117,13 +101,124 @@ app.post('/create_profile',async (req, res) => {
         "image": image,
     }
 
+    console.log(Object.keys(profile))
+    for (let key of Object.keys(profile)) {
+        if (!profile[key]) {
+            res.status(400).send(`${key} is undefined\n   ${key}=${profile.key}`)
+            return
+        }
+    }
+
+    if (MBTI_categories.includes(mbti) == false) {
+        res.status(400).send("Error:MBTI can be only of these categories:" + MBTI_categories.join(",") + `\n    mbti=${mbti}`)
+        return
+    }
+    if (Enneagram_categories.includes(enneagram) == false) {
+        res.status(400).send("Error:Enneagram can only be of these categories:" + MBTI_categories.join(",") + `\n    enneagram=${enneagram}`)
+        return
+    }
+
     await service.createProfile(db, profile)
 
     res.status(200).send(
-        `${JSON.stringify(profile)} \n profile added to database successfully!`
-        )
+        `${JSON.stringify(profile)} \n profile is added to the database`
+    )
+    return
 })
 
-app.post('/submit_comment/:id', async (req, res) => {
-    let {id} = req.params
+app.get('/get_comments/:profileId/:userId/', async (req, res) => {
+    let { userId, profileId} = req.params
+
+    if (!userId) {
+        res.status(400).send("Error:UserId is not defined")
+        return
+    }
+    if (!profileId) {
+        res.status(400).send("Error:profileId is not defined")
+        return
+    }
+
+    let comments = await service.getComments(db, userId, profileId)
+
+    res.status(200).send(comments)
+    return
+})
+
+app.post('/submit_comment/', async (req, res) => {
+    let { userId, profileId, comment } = req.body
+
+    if (!userId) {
+        res.status(400).send("Error:UserId is not defined")
+        return
+    }
+    if (!profileId) {
+        res.status(400).send("Error:profileId is not defined")
+        return
+    }
+    if (!comment) {
+        res.status(400).send("Error:comment is not defined")
+        return
+    }
+
+    await service.submitComment(db, userId, profileId, comment)
+
+    res.status(200).send(
+        `The comment "${comment}" was added to the profileId:${profileId} by userId:${userId}`
+    )
+    return
+})
+
+app.post('/submit_vote', async (req, res) => {
+    let { userId, profileId, vote } = req.body
+
+    if (!userId) {
+        res.status(400).send("Error:UserId is not defined")
+        return
+    }
+    if (!profileId) {
+        res.status(400).send("Error:profileId is not defined")
+        return
+    }
+    if (!vote) {
+        res.status(400).send("Error:vote is not defined")
+        return
+    }
+
+    if (MBTI_categories.includes(vote.mbti) == false) {
+        res.status(400).send("Error:MBTI can be only of these categories:" + MBTI_categories.join(",") + `\n    mbti=${vote.mbti}`)
+        return
+    }
+    if (Enneagram_categories.includes(vote.enneagram) == false) {
+        res.status(400).send("Error:Enneagram can only be of these categories:" + Enneagram_categories.join(",") + `\n    enneagram=${vote.enneagram}`)
+        return
+    }
+
+    if (Zodiac_categories.includes(vote.zodiac) == false) {
+        res.status(400).send("Error:Zodiac can only be of these categories:" + Zodiac_categories.join(",") + `\n    zodiac=${vote.zodiac}`)
+        return
+    }
+
+    await service.submitVote(db, userId, profileId, vote)
+    
+    res.status(200).send(
+        `The vote "${JSON.stringify(vote)}" was added to the profileId:${profileId} by userId:${userId}`
+    )
+    return
+})
+
+app.get('/get_vote/:profileId/:userId/', async (req, res) => {
+    let { userId, profileId } = req.params
+
+    if (!userId) {
+        res.status(400).send("Error:UserId is not defined")
+        return
+    }
+    if (!profileId) {
+        res.status(400).send("Error:profileId is not defined")
+        return
+    }
+
+    let vote = await service.getVote(db, userId, profileId)
+
+    res.status(200).send(vote)
 })

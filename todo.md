@@ -42,8 +42,9 @@ Aries, Taurus, Gemini, Cancer, Leo, Virgo, Libra, Scorpio, Sagittarius, Capricor
     - [ ] render page
 - [] Implement a backend API that supports the commenting and voting functionality described in the Figma
 - [] store votes/comments in mongodb
-- [] add a volume to mongodb container to persist the db 
+- [x] add a volume to mongodb container to persist the db 
 - [] add code to append profiles in profile.js and render page using ejs for a `profile[i]` in general for get request through browser 
+- [ ] add automated  testing
 
 
 ## things to learn
