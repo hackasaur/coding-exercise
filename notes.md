@@ -71,7 +71,7 @@ curl --header "Content-Type: application/json" \
 
 curl --header "Content-Type: application/json" \
   --request POST \
-  --data '{"name":"Gandalf", "description": "lotr", "mbti":"ISFJ", "enneagram": "9w1", "variant":"sp/so", "tritype":"725", "socionics":"SEE", "sloan": "RCOEN", "psyche":"FEVL", "image":"🥸"}' \
+  --data '{"name":"Gandalf", "description": "lotr", "mbti":"ISFJ", "enneagram": "9w1", "variant":"sp/so", "tritype":"725", "socionics":"SEE", "sloan": "RCOEN", "psyche":"FEVL", "image":"🧙"}' \
   http://localhost:3000/create_profile --verbose
 
 

@@ -18,7 +18,7 @@ const connectToDb = async (mongoURI) => {
 
     try {
         await db.createCollection("votes")
-        await db.collection("votes").createIndex({"userId" : 1, "profileId" :1}, {unique : true})
+        await db.collection("votes").createIndex({ "userId": 1, "profileId": 1 }, { unique: true })
     }
     catch
     { console.log("collection 'votes' already exists") }
@@ -30,7 +30,7 @@ const connectToDb = async (mongoURI) => {
 }
 
 const getProfileById = async (db, id) => {
-    let profile = db.collection("profiles").find({ "_id": ObjectId(id) }).toArray()
+    profile = db.collection("profiles").find({ "_id": ObjectId(id) }).toArray()
     return profile
 }
 
@@ -49,7 +49,7 @@ const insertComment = async (db, userId, profileId, comment) => {
 }
 
 const getComments = async (db, userId, profileId) => {
-    let comments = await db.collection("comments").find({profileId: profileId, userId: userId}).toArray()
+    let comments = await db.collection("comments").find({ profileId: profileId, userId: userId }).toArray()
     return comments
 }
 
@@ -58,8 +58,8 @@ const submitVote = async (db, userId, profileId, vote) => {
 }
 
 const getVote = async (db, userId, profileId) => {
-    let vote = await db.collection("votes").find({ profileId: profileId, userId: userId}, {userId:0, profileId:0, vote:1}).toArray()
+    let vote = await db.collection("votes").find({ profileId: profileId, userId: userId }, { userId: 0, profileId: 0, vote: 1 }).toArray()
     return vote
 }
 
-module.exports = {connectToDb, getProfileById, getAllProfiles, createProfile, submitComment: insertComment, getComments, submitVote, getVote}
+module.exports = { connectToDb, getProfileById, getAllProfiles, createProfile, submitComment: insertComment, getComments, submitVote, getVote }

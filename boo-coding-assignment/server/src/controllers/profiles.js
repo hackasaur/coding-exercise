@@ -1,5 +1,5 @@
 const database = require('../database/db.js')
-const {MBTI_categories, Enneagram_categories, Zodiac_categories} = require('./categories.json')
+const { MBTI_categories, Enneagram_categories, Zodiac_categories } = require('./categories.json')
 
 const profilesController = (db) => {
     return {
@@ -25,7 +25,7 @@ const profilesController = (db) => {
                 "variant": variant,
                 "tritype": tritype,
                 "socionics": socionics,
-                "sloans": sloan,
+                "sloan": sloan,
                 "psyche": psyche,
                 "image": image,
             }
@@ -49,14 +49,19 @@ const profilesController = (db) => {
             await database.createProfile(db, profile)
 
             res.status(200).send(
-                {"profile":profile, msg: "profile is added to the database"}
+                { "profile": profile, msg: "profile is added to the database" }
             )
             return
         },
         getProfileById: async (req, res) => {
             let { id } = req.params
             let profile = await database.getProfileById(db, id)
-            res.status(200).send(profile)
+            if (profile) {
+                res.status(200).send({"profile": profile, "msg": `profile for id:${id} exists in database`})
+            }
+            else{
+                res.status(400).send({"msg":`profile for id:${id} does not exist`})
+            }
         },
         getAllProfiles: async (req, res) => {
             let profiles = await database.getAllProfiles(db)
