@@ -22,7 +22,7 @@ curl --header "Content-Type: application/json" \
 (submit vote)
 curl --header "content-type: application/json" \
   --request post \
-  --data '{"userid":"<id>", "profileid":"<id>", "vote":{"mbti":"isfj","enneagram":"1w2", "zodiac":"cancer"}}' \
+  --data '{"userid":"<id>", "profileid":"<id>", "vote":{"mbti":"ISFJ","enneagram":"1w2", "zodiac":"Cancer"}}' \
   http://localhost:3000/submit_vote --verbose
 
 (get vote)

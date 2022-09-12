@@ -1,5 +1,5 @@
 const database = require('../database/db.js')
-const {MBTI_categories, Enneagram_categories, Zodiac_categories} = require('./categories.json')
+const { MBTI_categories, Enneagram_categories, Zodiac_categories } = require('./categories.json')
 
 const commentController = (db) => {
     return {
@@ -17,7 +17,7 @@ const commentController = (db) => {
 
             let comments = await database.getComments(db, userId, profileId)
 
-            res.status(200).send(comments)
+            res.status(200).send({ "comments": comments, "msg": `comments for the profileId:${profileId} by userId:${userId}`})
             return
         },
         submitComments: async (req, res) => {
@@ -36,10 +36,12 @@ const commentController = (db) => {
                 return
             }
 
-            await database.insertComment(db, userId, profileId, comment)
+            let commentRecord = { profileId: profileId, userId: userId, comment: comment }
+
+            await database.insertComment(db, commentRecord)
 
             res.status(200).send(
-                `The comment "${comment}" was added to the profileId:${profileId} by userId:${userId}`
+                { "comment": commentRecord, "msg": `The comment: "${comment}" was added to the profileId:${profileId} by userId:${userId}` }
             )
             return
         }

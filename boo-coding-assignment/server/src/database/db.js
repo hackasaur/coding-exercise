@@ -44,8 +44,8 @@ const createProfile = async (db, profile) => {
     return profile
 }
 
-const insertComment = async (db, userId, profileId, comment) => {
-    await db.collection("comments").insertOne({ profileId: profileId, userId: userId, comment: comment })
+const insertComment = async (db, commentRecord) => {
+    await db.collection("comments").insertOne(commentRecord)
 }
 
 const getComments = async (db, userId, profileId) => {
@@ -62,4 +62,4 @@ const getVote = async (db, userId, profileId) => {
     return vote
 }
 
-module.exports = { connectToDb, getProfileById, getAllProfiles, createProfile, submitComment: insertComment, getComments, submitVote, getVote }
+module.exports = { connectToDb, getProfileById, getAllProfiles, createProfile, insertComment, getComments, submitVote, getVote }
