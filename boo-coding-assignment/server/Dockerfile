@@ -3,5 +3,5 @@ FROM node:latest
 WORKDIR /server
 COPY . .
 RUN npm install
-CMD ["node", "./src/app.js"]
+CMD ["npm", "run", "app"]
 EXPOSE 3000

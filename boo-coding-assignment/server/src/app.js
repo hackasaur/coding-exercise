@@ -9,34 +9,6 @@ const { votesController } = require('./controllers/votes.js')
 
 let profile, comment, vote
 
-// const connectToDb = async (mongoURI) => {
-//     let client = await MongoClient.connect(mongoURI);
-//     db = client.db()
-//     try {
-//         await db.createCollection("profiles")
-//     }
-//     catch
-//     { console.log("collection 'profiles' already exists") }
-
-//     try {
-//         await db.createCollection("comments")
-//     }
-//     catch
-//     { console.log("collection 'comments' already exists") }
-
-//     try {
-//         await db.createCollection("votes")
-//         await db.collection("votes").createIndex({ "userId": 1, "profileId": 1 }, { unique: true })
-//     }
-//     catch
-//     { console.log("collection 'votes' already exists") }
-
-//     const items = await db.collection("profiles").find().toArray()
-//     console.log(items)
-// }
-
-// let connectionPromise = connectToDb(MONGO_URI)
-
 database.connectToDb(MONGO_URI).then((db) => {
     {
         profile = profilesController(db)

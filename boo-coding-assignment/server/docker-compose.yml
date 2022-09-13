@@ -9,7 +9,7 @@ services:
         - mongodb-net
     environment: 
       MONGO_URI: 'mongodb://mongodb:27017/myappdb'
-    # restart: always
+      restart: always
 
   mongodb:
     image: mongo
