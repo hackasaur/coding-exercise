@@ -1,6 +1,6 @@
 # syntax=docker/dockerfile:1
 FROM node:latest
-WORKDIR /server
+WORKDIR /app
 COPY . .
 RUN npm install
 CMD ["npm", "run", "app"]

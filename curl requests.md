@@ -15,6 +15,10 @@ curl --header "Content-Type: application/json" \
 curl --header "Content-Type: application/json" \
     http://localhost:3000/all_profiles --verbose
 
+(get profile by ID)
+curl --header "Content-Type: application/json" \
+    http://localhost:3000/profiles/<profile-id> --verbose
+
 (get comments)
 curl --header "Content-Type: application/json" \
     http://localhost:3000/get_comments/<profileId>/<userId> --verbose
